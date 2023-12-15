@@ -1,2 +1,4 @@
 venv/
 .idea/
+frontend/freelance-exchange/node_modules/
+.env
