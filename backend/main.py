@@ -2,7 +2,7 @@ import hashlib
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from database import create_db, Session
-from users import User
+from users import User, Freelancer, ProjectManager, Customer
 from pydantic import BaseModel
 from sqlalchemy.exc import IntegrityError
 
@@ -46,6 +46,11 @@ class UserLoginData(BaseModel):
     password: str
 
 
+class ProfileData(BaseModel):
+    rate: str
+    skills: str
+    description: str
+
 def validate_password(p: str):
     if len(p) >= 8:
         return True
@@ -53,6 +58,25 @@ def validate_password(p: str):
         return True
     else:
         return False
+
+
+@app.put("/profile/edit/{user_id}")
+async def edit_profile(user_id: int, data: ProfileData):
+    query = session.query(Freelancer).filter(Freelancer.freelancer_id == user_id)
+    for u in query:
+        u.rate = data.rate
+        u.skills = data.skills
+        u.description = data.description
+        session.add(u)
+        session.commit()
+    return {"message": "data changed"}
+
+
+@app.get("/profile/{user_id}")
+async def get_profile(user_id: int):
+    query = session.query(Freelancer).filter(Freelancer.freelancer_id == user_id)
+    for u in query:
+        return u
 
 
 @app.post("/auth/register")
@@ -63,6 +87,17 @@ async def register(u: UserInModel):
     try:
         new_user = User(name=u.name, email=u.email, password=password, a_type=u.account_type)
         session.add(new_user)
+        account_type = u.account_type
+        if account_type == 'freelancer':
+            freelancer = Freelancer(user_id=new_user.user_id)
+            new_user.freelancer_data.append(freelancer)
+        elif account_type == 'customer':
+            customer = Customer(user_id=new_user.user_id)
+            new_user.customer_data.append(customer)
+        elif account_type == 'manager':
+            manager = ProjectManager(user_id=new_user.user_id)
+            new_user.pm_data.append(manager)
+
         session.commit()
     except IntegrityError:
         raise HTTPException(status_code=403, detail="User already exists")

@@ -1,13 +1,16 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {Button, Container, Form} from "react-bootstrap";
+import {useNavigate} from "react-router-dom";
 
-const AuthPage = (userData) => {
+
+const AuthPage = ( ) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [accountType, setAccountType] = useState('customer'); // По умолчанию 'customer'
   const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,8 +35,13 @@ const AuthPage = (userData) => {
         url = 'http://localhost:8000/auth/login'; // Вставьте URL вашего API входа
         const response = await axios.post(url, requestData);
 
-        userData(response.data);
+        localStorage.setItem('user_id', JSON.stringify(response.data.user_id))
+        if(response.data.account_type === 'freelancer'){
+          navigate('/profile')
+        }
+
         console.log(response.data);
+
       } else {
         // Запрос на регистрацию
         const response = await axios.post(url, registerData);
