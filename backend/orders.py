@@ -56,5 +56,7 @@ class Task(Base):
     title = Column(String)
     start_data = Column(Date)
     end_date = Column(Date)
-    progress = Column(int)
+    progress = Column(Integer)
+
+
 

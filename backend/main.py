@@ -3,6 +3,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from database import create_db, Session
 from users import User, Freelancer, ProjectManager, Customer
+from orders import Order, Team, TeamFreelancer, Task
 from pydantic import BaseModel
 from sqlalchemy.exc import IntegrityError
 
@@ -50,6 +51,7 @@ class ProfileData(BaseModel):
     rate: str
     skills: str
     description: str
+
 
 def validate_password(p: str):
     if len(p) >= 8:
