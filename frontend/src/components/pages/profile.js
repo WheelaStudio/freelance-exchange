@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {Button, Container, Form} from "react-bootstrap";
 import Header from "../header";
+import {useNavigate} from "react-router-dom";
 
 
 
@@ -39,6 +40,8 @@ const ProfilePage = () => {
     const handleProfileUpdate = async (e) => {
         e.preventDefault();
 
+        const navigate = useNavigate
+
         try {
             const profileData = {
                 rate: hourlyRate,
@@ -52,6 +55,7 @@ const ProfilePage = () => {
             const response = await axios.put(`http://localhost:8000/profile/edit/${user_id}`, profileData);
 
             console.log('Данные профиля сохранены:', response.data);
+            navigate('/')
             // Дополнительная логика после успешного сохранения...
         } catch (error) {
             console.error('Ошибка сохранения данных профиля:', error);

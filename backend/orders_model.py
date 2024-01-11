@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, Integer, String, ForeignKey, Date
+from sqlalchemy import Column, Integer, String, ForeignKey, Date, Text
 
 
 class Order(Base):
@@ -22,6 +22,21 @@ class Order(Base):
         self.price = price
         self.time = time
         self.status = status
+
+
+class OrderResponse(Base):
+    __tablename__ = 'order_response'
+
+    response_id = Column(Integer, primary_key=True)
+
+    description = Column(String)
+    order_id = Column(Integer, ForeignKey('order.order_id'))
+    manager_id = Column(Integer, ForeignKey('manager.manager_id'))
+
+    def __init__(self, manager_id: int, order_id: int, description: str):
+        self.description = description
+        self.manager_id = manager_id
+        self.order_id = order_id
 
 
 class Team(Base):

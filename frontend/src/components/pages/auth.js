@@ -39,7 +39,9 @@ const AuthPage = ( ) => {
         if(response.data.account_type === 'freelancer'){
           navigate('/profile')
         }
-
+        else {
+          navigate('/')
+        }
         console.log(response.data);
 
       } else {
