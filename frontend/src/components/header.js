@@ -14,6 +14,7 @@ const Header = (props) => {
       <Navbar.Collapse id="basic-navbar-nav">
         {props.props === 'freelancer' ? (
             <Nav className="ml-auto">
+                <Nav.Item>Вы фрилансер</Nav.Item>
                 <LinkContainer to="/my-orders">
                     <Nav.Link>Мои заказы</Nav.Link>
                 </LinkContainer>
@@ -26,6 +27,7 @@ const Header = (props) => {
             </Nav>
         ) : props.props === 'customer' ? (
             <Nav className="ml-auto">
+                <Nav.Item>Вы покупатель</Nav.Item>
                 <LinkContainer to="/my-orders">
                     <Nav.Link>Мои заказы</Nav.Link>
                 </LinkContainer>
@@ -38,6 +40,7 @@ const Header = (props) => {
             </Nav>
         ) : props.props === 'manager' ? (
             <Nav className="ml-auto">
+                <Nav.Item>Вы менеджер</Nav.Item>
                 <LinkContainer to="/my-orders">
                     <Nav.Link>Мои заказы</Nav.Link>
                 </LinkContainer>

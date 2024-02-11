@@ -16,34 +16,46 @@ const MyOrdersPage = () => {
   useEffect(() => {
     const fetchMyOrders = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/order/orders/?page=1&page_size=12&user_id=${user_id}`);
+        const response_user_data = await axios.get(`http://localhost:8000/auth/get_account_type/${user_id}`)
+        setAccountType(response_user_data.data)
+
+        let response;
+
+        if (response_user_data.data === "customer"){
+            response = await axios.get(`http://localhost:8000/order/orders/?page=1&page_size=12&user_id=${user_id}`);
+        }
+        else if (response_user_data.data === "freelancer"){
+            response = await axios.get(`http://localhost:8000/order/orders/freelancer/${user_id}`);
+        }
+        else if (response_user_data.data === "manager"){
+            response = await axios.get(`http://localhost:8000/order/orders/manager/${user_id}`)
+        }
+
         setMyOrders(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Ошибка при загрузке созданных заказов:', error);
+        console.error('Ошибка при загрузке заказов:', error);
         setLoading(false);
       }
     };
     const fetchUserData = async () =>{
       try{
-          const response = await axios.get(`http://localhost:8000/auth/get_account_type/${user_id}`)
-          setAccountType(response.data)
-          console.log(response.data)
-          setLoading(false)
+
       }
       catch (error){
           console.error(error)
       }
     }
+
     if(!logged_in){
         navigate('/auth')
     }
     else{
         if (loading){
-            fetchUserData()
+            fetchMyOrders(accountType)
         }
     }
-    fetchMyOrders();
+
   }, []);
 
   return (
@@ -65,10 +77,18 @@ const MyOrdersPage = () => {
                         <div>
                           {/* Кнопка для просмотра откликов */}
                           <Link to={`/order/${order.order_id}/responses`} className="btn btn-primary">
-                            Просмотреть отклики
+                            Посмотреть отклики
                           </Link>
                         </div>
-                    )}
+                    ) }
+                     {order.status === 'working' && (
+                        <div>
+                          {/* Кнопка для просмотра откликов */}
+                          <Link to={`/order/${order.order_id}/tracker`} className="btn btn-primary">
+                            Отслеживание задач
+                          </Link>
+                        </div>
+                    ) }
                 </li>
               ))}
             </ul>

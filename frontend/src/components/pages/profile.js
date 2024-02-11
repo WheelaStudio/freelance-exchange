@@ -13,7 +13,9 @@ const ProfilePage = () => {
     const [experience, setExperience] = useState('');
     const [loading, setLoading] = useState(true)
     const user_id = JSON.parse(localStorage.getItem('user_id'))
+    const account_type = localStorage.getItem('account_type')
 
+    const navigate = useNavigate()
 
 
 
@@ -40,14 +42,13 @@ const ProfilePage = () => {
     const handleProfileUpdate = async (e) => {
         e.preventDefault();
 
-        const navigate = useNavigate
+
 
         try {
             const profileData = {
                 rate: hourlyRate,
                 skills: skills,
                 description: experience,
-
             };
 
 
@@ -64,8 +65,10 @@ const ProfilePage = () => {
     };
 
     return (
+        <div>
+        <Header props="freelancer"></Header>
         <Container className="mt-5">
-            <Header/>
+
             <h2>Профиль фрилансера</h2>
             {loading ? (
                 <p>Загрузка данных профиля...</p>
@@ -111,6 +114,8 @@ const ProfilePage = () => {
             )}
 
         </Container>
+
+        </div>
     );
 
 

@@ -7,7 +7,10 @@ import ExchangePage from "./components/pages/exchange";
 import CreateOrderPage from "./components/pages/order_create";
 import ResponsePage from "./components/pages/response";
 import MyOrdersPage from "./components/pages/myorders";
+import TaskTracker from "./components/pages/task_tracker";
 import OrderResponsesPage from "./components/pages/order_responses";
+import TeamPage from "./components/pages/team";
+import CreateVacancyPage from "./components/pages/create_vacancy";
 
 
 const App = () => {
@@ -21,6 +24,9 @@ const App = () => {
                 <Route path="/response/:orderId" element={<ResponsePage/>} />
                 <Route path="/order/:orderId/responses" element={<OrderResponsesPage/>} />
                 <Route path="/my-orders" element={<MyOrdersPage/>} />
+                <Route path="/order/:trackerId/tracker" element={<TaskTracker/>} />
+                <Route path="/team" element={<TeamPage/>} />
+                <Route path="/create-vacancy" element={<CreateVacancyPage/>} />
             </Routes>
         </BrowserRouter>
     )

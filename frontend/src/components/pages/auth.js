@@ -36,6 +36,8 @@ const AuthPage = ( ) => {
         const response = await axios.post(url, requestData);
 
         localStorage.setItem('user_id', JSON.stringify(response.data.user_id))
+        localStorage.setItem('account_type', response.data.account_type)
+
         if(response.data.account_type === 'freelancer'){
           navigate('/profile')
         }

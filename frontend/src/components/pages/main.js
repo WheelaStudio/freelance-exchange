@@ -2,6 +2,7 @@ import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import ExchangePage from "./exchange";
+import MyOrdersPage from "./myorders";
 
 
 
@@ -49,7 +50,7 @@ const MainPage = () =>{
 
                 <div>
                     {accountType === 'freelancer' ? (
-                        <p>You are freelancer</p>
+                        <MyOrdersPage/>
                     ) : accountType === 'manager' ? (
                         <ExchangePage props={accountType}/>
                     ) : accountType === 'customer' ?(

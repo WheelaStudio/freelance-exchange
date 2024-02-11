@@ -1,8 +1,9 @@
 from fastapi import APIRouter
 from database import Session
 from pydantic import BaseModel
-from orders_model import Order, OrderResponse
+from orders_model import Order, OrderResponse, TeamFreelancer, TaskTracker
 from sqlalchemy import desc
+
 
 router = APIRouter(prefix="/order", tags=["orders"])
 session = Session()
@@ -40,13 +41,11 @@ async def create_order(data: OrderData):
 @router.get('/orders/')
 async def get_orders(page: int, page_size: int, user_id: int = None):
 
-    print(user_id)
-
-    if user_id != None:
+    if user_id is not None:
         query = session.query(Order).filter(Order.customer_id == user_id)
 
     else:
-        query = session.query(Order).order_by(desc(Order.order_id)).offset(
+        query = session.query(Order).filter(Order.status == 'not_started').order_by(desc(Order.order_id)).offset(
             (page - 1) * page_size).limit(page_size)
 
     orders = []
@@ -57,9 +56,33 @@ async def get_orders(page: int, page_size: int, user_id: int = None):
     return orders
 
 
+@router.get('/orders/freelancer/{freelancer_id}')
+async def get_freelancer_orders(freelancer_id: int):
+    start_orders = session.query(Order).filter(Order.status == 'working')
+    result = []
+    for order in start_orders:
+        freelancers = session.query(TeamFreelancer).filter(TeamFreelancer.team_id == order.tracker_id)
+        for freelancer in freelancers:
+            if freelancer.freelancer_id == freelancer_id:
+                result.append(order)
+
+    return result
+
+
+@router.get('/orders/manager/{manager_id}')
+async def get_customer_orders(manager_id: int):
+    trackers = session.query(TaskTracker).filter(TaskTracker.manager_id == manager_id)
+    result = []
+    for tracker in trackers:
+        order = session.query(Order).filter(Order.order_id == tracker.order_id)[0]
+        result.append(order)
+
+    return result
+
+
 @router.get('/{order_id}')
 async def get_order_by_id(order_id: int):
-    query = session.query(Order).filter(Order.order_id == order_id);
+    query = session.query(Order).filter(Order.order_id == order_id)
     return query[0]
 
 
@@ -95,3 +118,7 @@ async def change_order(order_id: int):
     session.commit()
 
     return {'order changed'}
+
+
+
+
