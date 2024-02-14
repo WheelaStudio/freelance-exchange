@@ -2,6 +2,7 @@ import Header from "../header";
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {Button} from "react-bootstrap";
 
 const TeamPage = () => {
     const user_id = JSON.parse(localStorage.getItem('user_id'))
@@ -28,13 +29,27 @@ const TeamPage = () => {
         }
     };
 
+    const handleDeleteVacancy = async (vacancy_id) => {
+        try {
+            const response = await axios.delete(
+                `http://localhost:8000/vacancies/${vacancy_id}/delete`);
+            console.log(response.data)
+            fetchVacancies()
+        } catch (error) {
+            console.error('Ошибка при удалении вакансии:', error);
+        }
+    }
+
     const renderVacancies = () => {
         return vacancies.map(vacancy => (
             <div key={vacancy.id} className="card mb-3">
                 <div className="card-body">
                     <h3 className="card-title">{vacancy.title}</h3>
                     <p className="card-text">{vacancy.description}</p>
-                    <Link to={`/vacancies/${vacancy.id}/responses`} className="btn btn-primary">Просмотреть отклики</Link>
+                    <p className="card-text">Цена: {vacancy.price} рублей</p>
+                    <p className="card-text">Время: {vacancy.time} дней</p>
+                    <Link to={`/vacancies/${vacancy.vacancy_id}/responses`} className="btn btn-primary">Просмотреть отклики</Link>
+                    <button className="btn btn-danger" onClick={() => handleDeleteVacancy(vacancy.vacancy_id)}>Удалить вакансию</button>
                 </div>
             </div>
         ));

@@ -11,6 +11,7 @@ session = Session()
 
 
 class VacancyData(BaseModel):
+    order_id: int
     title: str
     description: str
     price: int
@@ -18,6 +19,7 @@ class VacancyData(BaseModel):
 
 
 class ResponseData(BaseModel):
+    order_id: int
     freelancer_id: int
     description: str
 
@@ -25,6 +27,7 @@ class ResponseData(BaseModel):
 @router.post('/{manager_id}/post')
 async def post_vacancy(manager_id: int, data: VacancyData):
     new_vacancy = Vacancy(manager_id)
+    new_vacancy.order_id = data.order_id
     new_vacancy.title = data.title
     new_vacancy.description = data.description
     new_vacancy.price = data.price
@@ -48,6 +51,13 @@ async def get_vacancies(page: int, page_size: int):
     return orders
 
 
+@router.get('/{vacancy_id}')
+async def get_vacancies(vacancy_id: int):
+    query = session.query(Vacancy).filter(Vacancy.vacancy_id == vacancy_id)[0]
+
+    return query
+
+
 @router.get('/{manager_id}/list')
 async def get_vacancies(manager_id: int):
     query = session.query(Vacancy).filter(Vacancy.manager_id == manager_id).order_by(
@@ -61,9 +71,27 @@ async def get_vacancies(manager_id: int):
     return orders
 
 
+@router.delete('/{vacancy_id}/delete')
+async def delete_vacancy(vacancy_id: int):
+    query = session.query(Vacancy).filter(Vacancy.vacancy_id == vacancy_id)[0]
+    session.delete(query)
+
+    return {'message': 'vacancy deleted'}
+
+
+@router.delete('/responses/{response_id}/delete')
+async def delete_response(response_id: int):
+    query = session.query(VacancyResponse).filter(
+        VacancyResponse.response_id == response_id)[0]
+    session.delete(query)
+
+    return {'message': 'response deleted'}
+
+
 @router.post('/{vacancy_id}/post/response')
 async def post_response(vacancy_id: int, data: ResponseData):
     new_response = VacancyResponse(vacancy_id, data.freelancer_id)
+    new_response.order_id = data.order_id
     new_response.description = data.description
     session.add(new_response)
     session.commit()

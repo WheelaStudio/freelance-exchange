@@ -56,6 +56,7 @@ class TeamFreelancer(Base):
     team_id = Column(Integer, ForeignKey('team.team_id'))
     freelancer_id = Column(Integer, ForeignKey('freelancer.freelancer_id'))
     name = Column(String, ForeignKey('user.name'))
+    email = Column(String, ForeignKey('user.email'))
 
     def __init__(self, t_id: int, f_id: int):
         self.team_id = t_id
@@ -99,6 +100,7 @@ class Vacancy(Base):
 
     vacancy_id = Column(Integer, primary_key=True)
     manager_id = Column(Integer, ForeignKey('manager.manager_id'))
+    order_id = Column(Integer, ForeignKey('order.order_id'))
 
     title = Column(String)
     description = Column(String)
@@ -113,6 +115,7 @@ class VacancyResponse(Base):
     __tablename__ = 'vacancies_response'
 
     response_id = Column(Integer, primary_key=True)
+    order_id = Column(Integer, ForeignKey('order.order_id'))
 
     description = Column(String)
     vacancy_id = Column(Integer, ForeignKey('vacancy.vacancy_id'))

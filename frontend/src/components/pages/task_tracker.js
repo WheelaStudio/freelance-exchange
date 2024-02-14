@@ -12,6 +12,7 @@ const TasksTable = () => {
   const account_type = localStorage.getItem('account_type')
   const { trackerId } = useParams();
   const [error, setError] = useState('');
+  const [selectedFreelancers, setSelectedFreelancers] = useState([]);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -46,6 +47,8 @@ const TasksTable = () => {
       setUsers([...users, newUser]);
       console.log('Новый пользователь добавлен:', newUser);
       setNewUserId(''); // Очищаем поле ввода после успешного добавления
+      // eslint-disable-next-line no-restricted-globals
+      location.reload()
     } catch (error) {
       console.error('Ошибка при добавлении нового пользователя:', error);
     }
@@ -113,40 +116,82 @@ const TasksTable = () => {
     }
   };
 
-  const validateFields = () => {
-    const emptyFields = tasks.filter(task => !task.name || !task.assignee || !task.startDate || !task.endDate || !task.progress);
-    if (emptyFields.length > 0) {
-      setError('Заполните все поля перед сохранением');
-      return false;
-    }
-    return true;
-  };
+
+
+    const handleRemoveFreelancer = async (freelancerId) => {
+      try {
+        const response = await axios.delete(
+            `http://localhost:8000/tracker/${trackerId}/team/freelancer/${freelancerId}/delete`);
+        // eslint-disable-next-line no-restricted-globals
+        location.reload()
+      }
+      catch (error) {
+        console.error('Ошибка при удалении:', error);
+      }
+    };
+
+
+    const handleRemoveTask = async (taskId) => {
+      try {
+        const response = await axios.delete(
+            `http://localhost:8000/tracker/${trackerId}/task/${taskId}/delete`);
+        // eslint-disable-next-line no-restricted-globals
+        location.reload()
+      }
+      catch (error) {
+        console.error('Ошибка при удалении:', error);
+      }
+    };
+
+
 
 
   return (
     <div>
       <Header props={account_type}></Header>
       <h1>Таск трекер</h1>
-      <Row className="mb-3">
-        <Col xs={4}>
-          <Form.Control
-            type="text"
-            placeholder="ID исполнителя"
-            value={newUserId}
-            onChange={(event) => setNewUserId(event.target.value)}
 
-          />
-        </Col>
-        <Col>
-          <Button variant="info" onClick={handleAddUser}>Добавить исполнителя</Button>
-          <Button variant="success" onClick={handleAddTask}>Добавить новую задачу</Button>
-        </Col>
-        {error && <Alert variant="danger">{error}</Alert>}
-      </Row>
       {loading ? (
         <p>Загрузка...</p>
       ) : (
         <div>
+
+        <Row className="mb-3">
+          <Col xs={4}>
+            <Form.Control
+              type="text"
+              placeholder="ID исполнителя"
+              value={newUserId}
+              onChange={(event) => setNewUserId(event.target.value)}
+
+            />
+          </Col>
+          <Col>
+            <Button variant="info" onClick={handleAddUser}>Добавить исполнителя</Button>
+            <Button variant="success" onClick={handleAddTask}>Добавить новую задачу</Button>
+          </Col>
+          {error && <Alert variant="danger">{error}</Alert>}
+        </Row>
+
+        <table className="table">
+          <thead>
+              <tr>
+                  <th scope="col">Имя</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Действие</th>
+              </tr>
+          </thead>
+          <tbody>
+              {users.map(freelancer => (
+                  <tr key={freelancer.freelancer_id}>
+                      <td>{freelancer.name}</td>
+                      <td>{freelancer.email}</td>
+                      <td><button className="btn btn-danger" onClick={() => handleRemoveFreelancer(freelancer.freelancer_id)}>Удалить</button></td>
+                  </tr>
+              ))}
+          </tbody>
+        </table>
+
         <Table className={'striped bordered hover'}>
 
           <thead>
@@ -204,6 +249,8 @@ const TasksTable = () => {
                       onChange={(e) => handleFieldChange(task.task_id, 'progress', e.target.value)}
                     />
                   </td>
+                  <td><button className="btn btn-danger" onClick={() => handleRemoveTask(task.task_id)}>Удалить</button></td>
+
                 </tr>
               ))}
             </tbody>

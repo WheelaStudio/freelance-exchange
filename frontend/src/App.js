@@ -11,6 +11,9 @@ import TaskTracker from "./components/pages/task_tracker";
 import OrderResponsesPage from "./components/pages/order_responses";
 import TeamPage from "./components/pages/team";
 import CreateVacancyPage from "./components/pages/create_vacancy";
+import DeveloperVacanciesPage from "./components/pages/vacancies";
+import ApplyVacancyPage from "./components/pages/vacancy_response";
+import ResponsesPage from "./components/pages/vacancy_responses";
 
 
 const App = () => {
@@ -27,6 +30,9 @@ const App = () => {
                 <Route path="/order/:trackerId/tracker" element={<TaskTracker/>} />
                 <Route path="/team" element={<TeamPage/>} />
                 <Route path="/create-vacancy" element={<CreateVacancyPage/>} />
+                <Route path="/vacancies" element={<DeveloperVacanciesPage/>} />
+                <Route path="/vacancies/:vacancyId/apply" element={<ApplyVacancyPage/>} />
+                <Route path="/vacancies/:vacancyId/responses" element={<ResponsesPage/>} />
             </Routes>
         </BrowserRouter>
     )

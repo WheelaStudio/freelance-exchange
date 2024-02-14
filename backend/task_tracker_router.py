@@ -4,6 +4,7 @@ from database import Session
 from orders_model import TaskTracker, Team, TeamFreelancer, Task, Order
 from users_model import User
 from fastapi import APIRouter
+from fastapi.responses import JSONResponse
 from sqlalchemy import desc
 
 router = APIRouter(prefix="/tracker", tags=["task tracker"])
@@ -43,21 +44,30 @@ async def create_task_tracker(order_id: int, manager_id: int):
 
 @router.post('/team/{tracker_id}/add_freelancer/{freelancer_id}/')
 async def add_freelancer(tracker_id: int, freelancer_id: int):
-    new_freelancer = TeamFreelancer(t_id=tracker_id, f_id=freelancer_id)
 
-    freelancer = session.query(User).filter(
-        User.user_id == freelancer_id
-    )[0]
+    query = session.query(TeamFreelancer).filter(
+        TeamFreelancer.team_id == tracker_id and TeamFreelancer.freelancer_id == freelancer_id
+    )
 
-    new_freelancer.name = freelancer.name
-    session.add(new_freelancer)
-    session.commit()
+    if query.count() == 0:
+        new_freelancer = TeamFreelancer(t_id=tracker_id, f_id=freelancer_id)
 
-    freelancer = session.query(User).filter(
-        User.user_id == freelancer_id
-    )[0]
+        freelancer = session.query(User).filter(
+            User.user_id == freelancer_id
+        )[0]
 
-    return {freelancer}
+        new_freelancer.name = freelancer.name
+        new_freelancer.email = freelancer.email
+        session.add(new_freelancer)
+        session.commit()
+
+        freelancer = session.query(User).filter(
+            User.user_id == freelancer_id
+        )[0]
+
+        return {freelancer}
+    else:
+        return JSONResponse(content={"message": "user already exists"}, status_code=400)
 
 
 @router.get('/{tracker_id}/tasks')
@@ -116,4 +126,14 @@ async def delete_task(tracker_id: int, task_id: int):
     session.commit()
 
     return {"message": "task deleted"}
+
+
+@router.delete('/{tracker_id}/team/freelancer/{freelancer_id}/delete')
+async def delete_task(tracker_id: int, freelancer_id: int):
+    task = session.query(TeamFreelancer).filter(
+        TeamFreelancer.team_id == tracker_id and TeamFreelancer.freelancer_id == freelancer_id)[0]
+    session.delete(task)
+    session.commit()
+
+    return {"message": "freelancer deleted"}
 

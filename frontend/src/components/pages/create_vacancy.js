@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 
@@ -8,6 +8,8 @@ const CreateVacancyPage = () => {
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
     const [time, setTime] = useState('');
+    const [orders, setOrders] = useState([]);
+    const [selectedOrder, setSelectedOrder] = useState('');
     const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
@@ -15,6 +17,7 @@ const CreateVacancyPage = () => {
         try {
 
             const data = {
+                order_id: selectedOrder,
                 title: title,
                 description: description,
                 price: price,
@@ -26,6 +29,19 @@ const CreateVacancyPage = () => {
             navigate('/team')
         } catch (error) {
             console.error('Ошибка при создании вакансии:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchOrders();
+    }, [])
+
+    const fetchOrders = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8000/order/orders/manager/${user_id}`);
+            setOrders(response.data);
+        } catch (error) {
+            console.error('Ошибка при загрузке заказов:', error);
         }
     };
 
@@ -48,6 +64,15 @@ const CreateVacancyPage = () => {
                 <div className="mb-3">
                     <label htmlFor="time" className="form-label">Время</label>
                     <input type="text" className="form-control" id="time" value={time} onChange={(e) => setTime(e.target.value)} required />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="order" className="form-label">Выберите заказ</label>
+                    <select className="form-select" value={selectedOrder} onChange={(e) => setSelectedOrder(e.target.value)} required>
+                        <option value="">Выберите заказ</option>
+                        {orders.map(order => (
+                            <option key={order.order_id} value={order.order_id}>{order.title}</option>
+                        ))}
+                    </select>
                 </div>
                 <button type="submit" className="btn btn-primary">Создать</button>
             </form>
