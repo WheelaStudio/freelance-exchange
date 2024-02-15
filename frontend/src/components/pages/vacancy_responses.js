@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import host from "../../api";
 
 const ResponsesPage = () => {
     const { vacancyId } = useParams();
@@ -12,7 +13,7 @@ const ResponsesPage = () => {
 
     const fetchResponses = async () => {
         try {
-            const response = await axios.get(`http://localhost:8000/vacancies/${vacancyId}/responses`);
+            const response = await axios.get(`${host}/vacancies/${vacancyId}/responses`);
             setResponses(response.data);
         } catch (error) {
             console.error('Ошибка при загрузке откликов:', error);
@@ -21,8 +22,8 @@ const ResponsesPage = () => {
 
     const handleStartWork = async (freelancer_id, order_id, response_id) => {
         try {
-            await axios.post(`http://localhost:8000/tracker/team/${order_id}/add_freelancer/${freelancer_id}`);
-            await axios.delete(`http://localhost:8000/vacancies/responses/${response_id}/delete`)
+            await axios.post(`${host}/tracker/team/${order_id}/add_freelancer/${freelancer_id}`);
+            await axios.delete(`${host}../vacancies/responses/${response_id}/delete`)
             fetchResponses()
             // Дополнительные действия после успешного начала работы с фрилансером
         } catch (error) {

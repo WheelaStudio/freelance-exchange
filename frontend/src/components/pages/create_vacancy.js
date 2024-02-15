@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
+import host from "../../api";
 
 const CreateVacancyPage = () => {
     const user_id = JSON.parse(localStorage.getItem('user_id'))
@@ -24,7 +25,7 @@ const CreateVacancyPage = () => {
                 time: time,
             }
 
-            await axios.post(`http://localhost:8000/vacancies/${user_id}/post`,
+            await axios.post(`${host}/vacancies/${user_id}/post`,
                 data);
             navigate('/team')
         } catch (error) {
@@ -38,7 +39,7 @@ const CreateVacancyPage = () => {
 
     const fetchOrders = async () => {
         try {
-            const response = await axios.get(`http://localhost:8000/order/orders/manager/${user_id}`);
+            const response = await axios.get(`${host}/order/orders/manager/${user_id}`);
             setOrders(response.data);
         } catch (error) {
             console.error('Ошибка при загрузке заказов:', error);

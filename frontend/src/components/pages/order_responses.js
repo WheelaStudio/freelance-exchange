@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {useNavigate, useParams} from "react-router-dom";
+import host from "../../api";
 
 const OrderResponsesPage = () => {
   const { orderId } = useParams();
@@ -15,7 +16,7 @@ const OrderResponsesPage = () => {
 
     const fetchResponses = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/order/${orderId}/responses`);
+        const response = await axios.get(`${host}/order/${orderId}/responses`);
         setResponses(response.data);
         setLoading(false);
       } catch (error) {
@@ -30,8 +31,8 @@ const OrderResponsesPage = () => {
   const handleSetOrderStatus = async (responseId) => {
   try {
 
-    await axios.put(`http://localhost:8000/order/${orderId}/change`);
-    await axios.post(`http://localhost:8000/tracker/create/?order_id=${orderId}&manager_id=${user_id}`)
+    await axios.put(`${host}/order/${orderId}/change`);
+    await axios.post(`${host}/tracker/create/?order_id=${orderId}&manager_id=${user_id}`)
     nav(`/order/${orderId}/tracker`)
   } catch (error) {
     console.error('Ошибка при изменении статуса заказа:', error);

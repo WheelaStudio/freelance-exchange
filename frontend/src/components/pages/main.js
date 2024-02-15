@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import ExchangePage from "./exchange";
 import MyOrdersPage from "./myorders";
+import host from "../../api";
 
 
 
@@ -18,7 +19,7 @@ const MainPage = () =>{
     useEffect(() =>{
         const fetchUserData = async () =>{
             try{
-                const response = await axios.get(`http://localhost:8000/auth/get_account_type/${user_id}`)
+                const response = await axios.get(`${host}/auth/get_account_type/${user_id}`)
                 setAccountType(response.data)
                 console.log(response.data)
                 setLoading(false)

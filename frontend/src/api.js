@@ -1,5 +1,4 @@
-import axios from 'axios'
 
-const api = axios.create({
-    baseURL: 'http://localhost:8000',
-});
+const host = 'http://185.43.5.198:8000'
+
+export default host

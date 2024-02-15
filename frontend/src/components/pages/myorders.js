@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {Link, useNavigate} from "react-router-dom";
 import Header from "../header";
+import host from "../../api";
 
 const MyOrdersPage = () => {
   const [myOrders, setMyOrders] = useState([]);
@@ -16,19 +17,19 @@ const MyOrdersPage = () => {
   useEffect(() => {
     const fetchMyOrders = async () => {
       try {
-        const response_user_data = await axios.get(`http://localhost:8000/auth/get_account_type/${user_id}`)
+        const response_user_data = await axios.get(`${host}/auth/get_account_type/${user_id}`)
         setAccountType(response_user_data.data)
 
         let response;
 
         if (response_user_data.data === "customer"){
-            response = await axios.get(`http://localhost:8000/order/orders/?page=1&page_size=12&user_id=${user_id}`);
+            response = await axios.get(`${host}/order/orders/?page=1&page_size=12&user_id=${user_id}`);
         }
         else if (response_user_data.data === "freelancer"){
-            response = await axios.get(`http://localhost:8000/order/orders/freelancer/${user_id}`);
+            response = await axios.get(`${host}/order/orders/freelancer/${user_id}`);
         }
         else if (response_user_data.data === "manager"){
-            response = await axios.get(`http://localhost:8000/order/orders/manager/${user_id}`)
+            response = await axios.get(`${host}/order/orders/manager/${user_id}`)
         }
 
         setMyOrders(response.data);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {useNavigate, useParams} from "react-router-dom";
+import host from "../../api";
 
 const ResponsePage = () => {
 
@@ -17,7 +18,7 @@ const ResponsePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/order/${orderId}`);
+        const response = await axios.get(`${host}/order/${orderId}`);
         setOrderData(response.data); // Получение данных о заказе
         setLoading(false);
       } catch (error) {
@@ -38,7 +39,7 @@ const ResponsePage = () => {
         description: responseText
       }
 
-      await axios.post(`http://localhost:8000/order/${orderId}/response`, response_data);
+      await axios.post(`${host}/order/${orderId}/response`, response_data);
       console.log('Отклик отправлен успешно');
       setSubmitting(false);
       setResponseText('');

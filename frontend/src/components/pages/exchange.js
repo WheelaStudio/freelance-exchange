@@ -2,6 +2,7 @@ import Header from "../header";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Link} from "react-router-dom";
+import host from "../../api";
 
 const ExchangePage = (props) => {
 
@@ -16,7 +17,7 @@ const ExchangePage = (props) => {
         const fetchOrders = async () => {
           try {
 
-            const response = await axios.get(`http://localhost:8000/order/orders/?page=1&page_size=10`);
+            const response = await axios.get(`${host}/order/orders/?page=1&page_size=10`);
             setOrders(response.data);
             setLoading(false);
           } catch (error) {

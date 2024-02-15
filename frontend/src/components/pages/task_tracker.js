@@ -3,6 +3,7 @@ import axios from 'axios';
 import {Table, Form, Button, Row, Col, Alert} from 'react-bootstrap';
 import Header from "../header";
 import {json, useParams} from "react-router-dom";
+import host from "../../api";
 
 const TasksTable = () => {
   const [tasks, setTasks] = useState([]);
@@ -18,12 +19,12 @@ const TasksTable = () => {
     const fetchTasks = async () => {
       try {
 
-        const tasksResponse = await axios.get(`http://localhost:8000/tracker/${trackerId}/tasks`);
+        const tasksResponse = await axios.get(`${host}/tracker/${trackerId}/tasks`);
         setTasks(tasksResponse.data);
 
         console.log(tasks)
 
-        const usersResponse = await axios.get(`http://localhost:8000/tracker/${trackerId}/team`);
+        const usersResponse = await axios.get(`${host}/tracker/${trackerId}/team`);
 
         setUsers(usersResponse.data);
         setLoading(false);
@@ -42,7 +43,7 @@ const TasksTable = () => {
 
   const handleAddUser = async () => {
     try {
-      const response = await axios.post(`http://localhost:8000/tracker/team/${trackerId}/add_freelancer/${newUserId}/`);
+      const response = await axios.post(`${host}/tracker/team/${trackerId}/add_freelancer/${newUserId}/`);
       const newUser = response.data; // Предположим, что в ответе приходит новый пользователь
       setUsers([...users, newUser]);
       console.log('Новый пользователь добавлен:', newUser);
@@ -94,7 +95,7 @@ const TasksTable = () => {
     console.log(t.task_id)
 
     const response = await axios.put(
-          `http://localhost:8000/tracker/${trackerId}/task/${t.task_id}`, task)
+          `${host}/tracker/${trackerId}/task/${t.task_id}`, task)
 
 
 
@@ -103,7 +104,7 @@ const TasksTable = () => {
   const handleAddTask = async () => {
     try {
       const response = await axios.post(
-          `http://localhost:8000/tracker/${trackerId}/create_task`);
+          `${host}/tracker/${trackerId}/create_task`);
       const newTask = response.data;
 
       setTasks([...tasks, newTask]);
@@ -121,7 +122,7 @@ const TasksTable = () => {
     const handleRemoveFreelancer = async (freelancerId) => {
       try {
         const response = await axios.delete(
-            `http://localhost:8000/tracker/${trackerId}/team/freelancer/${freelancerId}/delete`);
+            `${host}/tracker/${trackerId}/team/freelancer/${freelancerId}/delete`);
         // eslint-disable-next-line no-restricted-globals
         location.reload()
       }
@@ -134,7 +135,7 @@ const TasksTable = () => {
     const handleRemoveTask = async (taskId) => {
       try {
         const response = await axios.delete(
-            `http://localhost:8000/tracker/${trackerId}/task/${taskId}/delete`);
+            `${host}/tracker/${trackerId}/task/${taskId}/delete`);
         // eslint-disable-next-line no-restricted-globals
         location.reload()
       }

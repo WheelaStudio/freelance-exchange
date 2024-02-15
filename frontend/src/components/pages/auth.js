@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {Button, Container, Form} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
-
+import host from "../../api";
 
 const AuthPage = ( ) => {
   const [name, setName] = useState('');
@@ -16,7 +16,7 @@ const AuthPage = ( ) => {
     e.preventDefault();
 
     try {
-      let url = 'http://localhost:8000/auth/register'; // Вставьте URL вашего API регистрации или входа
+      let url = `${host}/auth/register`; // Вставьте URL вашего API регистрации или входа
       let requestData = {
         email: email,
         password: password,
@@ -32,7 +32,7 @@ const AuthPage = ( ) => {
 
       if (isLogin) {
         // Запрос на вход
-        url = 'http://localhost:8000/auth/login'; // Вставьте URL вашего API входа
+        url = `${host}/auth/login`; // Вставьте URL вашего API входа
         const response = await axios.post(url, requestData);
 
         localStorage.setItem('user_id', JSON.stringify(response.data.user_id))

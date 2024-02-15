@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import axios from 'axios';
 import Header from "../header";
+import host from "../../api";
 
 const ApplyVacancyPage = () => {
     const { vacancyId } = useParams();
@@ -16,7 +17,7 @@ const ApplyVacancyPage = () => {
 
     const fetchVacancy = async () => {
         try {
-            const response = await axios.get(`http://localhost:8000/vacancies/${vacancyId}`);
+            const response = await axios.get(`${host}/vacancies/${vacancyId}`);
             setVacancy(response.data);
         } catch (error) {
             console.error('Ошибка при загрузке вакансии:', error);
@@ -31,7 +32,7 @@ const ApplyVacancyPage = () => {
                 freelancer_id: userId,
                 description: description
             }
-            await axios.post(`http://localhost:8000/vacancies/${vacancyId}/post/response`, data);
+            await axios.post(`${host}/vacancies/${vacancyId}/post/response`, data);
             // Redirect or show success message after successful submission
             navigate('/vacancies')
         } catch (error) {

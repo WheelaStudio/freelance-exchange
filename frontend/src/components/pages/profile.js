@@ -3,6 +3,7 @@ import axios from "axios";
 import {Button, Container, Form} from "react-bootstrap";
 import Header from "../header";
 import {useNavigate} from "react-router-dom";
+import host from "../../api";
 
 
 
@@ -22,7 +23,7 @@ const ProfilePage = () => {
     useEffect(() =>{
         const fetchUserData = async () => {
             try{
-                const response = await axios.get(`http://localhost:8000/profile/${user_id}`)
+                const response = await axios.get(`${host}/profile/${user_id}`)
                 setHourlyRate(response.data.rate)
                 setSkills(response.data.skills)
                 setExperience(response.data.description)
@@ -53,7 +54,7 @@ const ProfilePage = () => {
 
 
 
-            const response = await axios.put(`http://localhost:8000/profile/edit/${user_id}`, profileData);
+            const response = await axios.put(`${host}/profile/edit/${user_id}`, profileData);
 
             console.log('Данные профиля сохранены:', response.data);
             navigate('/')
@@ -83,6 +84,7 @@ const ProfilePage = () => {
             value={hourlyRate}
             onChange={(e) => setHourlyRate(e.target.value)}
         />
+
     </Form.Group>
 
     <Form.Group controlId="formSkills">

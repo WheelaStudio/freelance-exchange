@@ -2,6 +2,7 @@ import Header from "../header";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import host from "../../api";
 
 
 
@@ -36,7 +37,7 @@ const CreateOrderPage = () => {
               status: "not_started"
             }
 
-          const response = await axios.post('http://localhost:8000/order/create', order_data);
+          const response = await axios.post(`${host}/order/create`, order_data);
 
           console.log('Заказ успешно создан:', response.data);
           // Здесь можно добавить переадресацию на страницу со списком заказов или что-то еще
@@ -52,7 +53,7 @@ const CreateOrderPage = () => {
     useEffect(() =>{
         const fetchUserData = async () =>{
             try{
-                const response = await axios.get(`http://localhost:8000/auth/get_account_type/${user_id}`)
+                const response = await axios.get(`${host}/auth/get_account_type/${user_id}`)
                 setAccountType(response.data)
                 console.log(response.data)
                 setLoading(false)

@@ -3,6 +3,7 @@ import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Button} from "react-bootstrap";
+import host from "../../api";
 
 const TeamPage = () => {
     const user_id = JSON.parse(localStorage.getItem('user_id'))
@@ -22,7 +23,7 @@ const TeamPage = () => {
     const fetchVacancies = async () => {
         try {
             const response = await axios.get(
-                `http://localhost:8000/vacancies/${user_id}/list`);
+                `${host}/vacancies/${user_id}/list`);
             setVacancies(response.data);
         } catch (error) {
             console.error('Ошибка при загрузке вакансий:', error);
@@ -32,7 +33,7 @@ const TeamPage = () => {
     const handleDeleteVacancy = async (vacancy_id) => {
         try {
             const response = await axios.delete(
-                `http://localhost:8000/vacancies/${vacancy_id}/delete`);
+                `${host}/vacancies/${vacancy_id}/delete`);
             console.log(response.data)
             fetchVacancies()
         } catch (error) {

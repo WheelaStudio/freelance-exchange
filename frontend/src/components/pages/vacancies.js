@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Header from "../header";
+import host from "../../api";
 
 const DeveloperVacanciesPage = () => {
     const [vacancies, setVacancies] = useState([]);
@@ -14,7 +15,7 @@ const DeveloperVacanciesPage = () => {
     const fetchVacancies = async () => {
         try {
             const response = await axios.get(
-                'http://localhost:8000/vacancies/list/?page=1&page_size=10');
+                `${host}/vacancies/list/?page=1&page_size=10`);
             setVacancies(response.data);
         } catch (error) {
             console.error('Ошибка при загрузке вакансий:', error);
