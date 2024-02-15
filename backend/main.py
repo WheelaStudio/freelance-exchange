@@ -12,7 +12,8 @@ create_db()
 app = FastAPI()
 
 origins = [
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'http://185.43.5.198/'
 ]
 
 app.add_middleware(CORSMiddleware,
