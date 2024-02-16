@@ -69,6 +69,7 @@ async def register(u: UserInModel):
 
         session.commit()
     except IntegrityError:
+        session.rollback()
         raise HTTPException(status_code=403, detail="User already exists")
     session.close()
     return {"message": "user created"}
