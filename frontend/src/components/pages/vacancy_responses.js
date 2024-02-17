@@ -22,7 +22,8 @@ const ResponsesPage = () => {
 
     const handleStartWork = async (freelancer_id, order_id, response_id) => {
         try {
-            const trackerId = await axios.get(`${host}/tracker/get-id/${order_id}`)
+            const trackerId = (await axios.get(`${host}/tracker/get-id/${order_id}`)).data
+
             await axios.post(`${host}/tracker/team/${trackerId}/add_freelancer/${freelancer_id}`);
             await axios.delete(`${host}/vacancies/responses/${response_id}/delete`)
             fetchResponses()

@@ -21,7 +21,7 @@ const TasksTable = () => {
     const fetchTasks = async () => {
       try {
 
-        trackerId = await axios.get(`${host}/tracker/get-id/${orderId}`)
+        trackerId = await (await axios.get(`${host}/tracker/get-id/${orderId}`)).data
 
         const tasksResponse = await axios.get(`${host}/tracker/${trackerId}/tasks`);
         setTasks(tasksResponse.data);
