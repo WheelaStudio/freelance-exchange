@@ -23,7 +23,7 @@ const ResponsesPage = () => {
     const handleStartWork = async (freelancer_id, order_id, response_id) => {
         try {
             await axios.post(`${host}/tracker/team/${order_id}/add_freelancer/${freelancer_id}`);
-            await axios.delete(`${host}../vacancies/responses/${response_id}/delete`)
+            await axios.delete(`${host}/vacancies/responses/${response_id}/delete`)
             fetchResponses()
             // Дополнительные действия после успешного начала работы с фрилансером
         } catch (error) {
