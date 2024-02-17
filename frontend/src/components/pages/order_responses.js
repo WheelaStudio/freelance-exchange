@@ -28,11 +28,11 @@ const OrderResponsesPage = () => {
     fetchResponses();
   }, [orderId]);
 
-  const handleSetOrderStatus = async (responseId) => {
+  const handleSetOrderStatus = async (manager_id) => {
   try {
 
     await axios.put(`${host}/order/${orderId}/change`);
-    await axios.post(`${host}/tracker/create/?order_id=${orderId}&manager_id=${user_id}`)
+    await axios.post(`${host}/tracker/create/?order_id=${orderId}&manager_id=${manager_id}`)
     nav(`/order/${orderId}/tracker`)
   } catch (error) {
     console.error('Ошибка при изменении статуса заказа:', error);
@@ -51,7 +51,7 @@ const OrderResponsesPage = () => {
               <p>{response.description}</p>
               <button
                 className="btn btn-warning"
-                onClick={() => handleSetOrderStatus(response.id)}
+                onClick={() => handleSetOrderStatus(response.manager_id)}
               >
                 Начать работу
               </button>
