@@ -15,12 +15,13 @@ const TasksTable = () => {
 
   const [error, setError] = useState('');
   const [selectedFreelancers, setSelectedFreelancers] = useState([]);
+  let trackerId = 0
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
 
-        const trackerId = await axios.get(`${host}/tracker/get-id/${orderId}`)
+        trackerId = await axios.get(`${host}/tracker/get-id/${orderId}`)
 
         const tasksResponse = await axios.get(`${host}/tracker/${trackerId}/tasks`);
         setTasks(tasksResponse.data);
