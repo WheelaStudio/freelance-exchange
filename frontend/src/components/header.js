@@ -31,9 +31,6 @@ const Header = (props) => {
                 <LinkContainer to="/my-orders">
                     <Nav.Link>Мои заказы</Nav.Link>
                 </LinkContainer>
-                <LinkContainer to="/">
-                    <Nav.Link>Биржа</Nav.Link>
-                </LinkContainer>
                 <LinkContainer to="/create_order">
                     <Nav.Link className={'btn btn-primary'}>Создать заказ</Nav.Link>
                 </LinkContainer>
