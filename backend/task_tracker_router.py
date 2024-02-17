@@ -20,6 +20,23 @@ class TaskDataModel(BaseModel):
     progress: int
 
 
+@router.get('/list')
+async def trackers():
+    query = session.query(TaskTracker)
+
+    result = []
+    for i in query:
+        result.append(i)
+
+    return result
+
+
+@router.get('/get-id/{order_id}')
+async def get_tracker_id(order_id):
+    order = session.query(Order).filter(Order.order_id == order_id)[0]
+    return order.tracker_id
+
+
 @router.post('/create')
 async def create_task_tracker(order_id: int, manager_id: int):
     team = Team(manager_id=manager_id)

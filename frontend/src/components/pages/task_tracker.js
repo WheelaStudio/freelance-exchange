@@ -11,13 +11,16 @@ const TasksTable = () => {
   const [loading, setLoading] = useState(true);
   const [newUserId, setNewUserId] = useState('');
   const account_type = localStorage.getItem('account_type')
-  const { trackerId } = useParams();
+  const { orderId } = useParams();
+
   const [error, setError] = useState('');
   const [selectedFreelancers, setSelectedFreelancers] = useState([]);
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
+
+        const trackerId = await axios.get(`${host}/tracker/get-id/${orderId}`)
 
         const tasksResponse = await axios.get(`${host}/tracker/${trackerId}/tasks`);
         setTasks(tasksResponse.data);
