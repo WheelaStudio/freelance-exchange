@@ -15,13 +15,13 @@ const TasksTable = () => {
 
   const [error, setError] = useState('');
   const [selectedFreelancers, setSelectedFreelancers] = useState([]);
-  let trackerId = 0
+
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
 
-        trackerId = await (await axios.get(`${host}/tracker/get-id/${orderId}`)).data
+        const trackerId = await (await axios.get(`${host}/tracker/get-id/${orderId}`)).data
 
         const tasksResponse = await axios.get(`${host}/tracker/${trackerId}/tasks`);
         setTasks(tasksResponse.data);
@@ -47,6 +47,7 @@ const TasksTable = () => {
 
   const handleAddUser = async () => {
     try {
+      const trackerId = await (await axios.get(`${host}/tracker/get-id/${orderId}`)).data
       const response = await axios.post(`${host}/tracker/team/${trackerId}/add_freelancer/${newUserId}/`);
       const newUser = response.data; // Предположим, что в ответе приходит новый пользователь
       setUsers([...users, newUser]);
@@ -98,6 +99,8 @@ const TasksTable = () => {
 
     console.log(t.task_id)
 
+    const trackerId = await (await axios.get(`${host}/tracker/get-id/${orderId}`)).data
+
     const response = await axios.put(
           `${host}/tracker/${trackerId}/task/${t.task_id}`, task)
 
@@ -107,14 +110,16 @@ const TasksTable = () => {
 
   const handleAddTask = async () => {
     try {
+
+      const trackerId = await (await axios.get(`${host}/tracker/get-id/${orderId}`)).data
+
       const response = await axios.post(
           `${host}/tracker/${trackerId}/create_task`);
       const newTask = response.data;
 
       setTasks([...tasks, newTask]);
       console.log('Новая задача успешно добавлена:', newTask);
-      // eslint-disable-next-line no-restricted-globals
-      location.reload()
+
     }
     catch (error) {
       console.error('Ошибка при добавлении новой задачи:', error);
@@ -125,6 +130,9 @@ const TasksTable = () => {
 
     const handleRemoveFreelancer = async (freelancerId) => {
       try {
+
+        const trackerId = await (await axios.get(`${host}/tracker/get-id/${orderId}`)).data
+
         const response = await axios.delete(
             `${host}/tracker/${trackerId}/team/freelancer/${freelancerId}/delete`);
         // eslint-disable-next-line no-restricted-globals
@@ -138,6 +146,7 @@ const TasksTable = () => {
 
     const handleRemoveTask = async (taskId) => {
       try {
+        const trackerId = await (await axios.get(`${host}/tracker/get-id/${orderId}`)).data
         const response = await axios.delete(
             `${host}/tracker/${trackerId}/task/${taskId}/delete`);
         // eslint-disable-next-line no-restricted-globals
